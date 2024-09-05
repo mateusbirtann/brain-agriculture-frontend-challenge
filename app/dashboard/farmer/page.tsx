@@ -29,14 +29,14 @@ export default async function page({ searchParams }: paramsProps) {
 
         <div className="flex items-start justify-between">
           <Heading
-            title="Lista de produtores Rurais"
-            description="Gerencie os produtores Rurais da plataforma."
+            title="Produtores rurais"
+            description="Gerencie os produtores rurais da plataforma."
           />
           <Link
             href={'/dashboard/farmer/new'}
             className={cn(buttonVariants({ variant: 'default' }))}
           >
-            <Plus className="mr-2 h-4 w-4" /> Adicionar novo produtor cultural
+            <Plus className="mr-2 h-4 w-4" /> Adicionar novo produtor rural
           </Link>
         </div>
         <Separator />
