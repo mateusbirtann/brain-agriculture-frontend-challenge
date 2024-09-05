@@ -7,18 +7,24 @@ describe('AlertModal', () => {
     isOpen: true,
     onClose: jest.fn(),
     onConfirm: jest.fn(),
-    loading: false,
+    loading: false
   };
 
   it('should render the modal when isOpen is true', () => {
     render(<AlertModal {...defaultProps} />);
-    expect(screen.getByText('Tem certeza que deseja excluir?')).toBeInTheDocument();
-    expect(screen.getByText('Essa ação não pode ser desfeita.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Tem certeza que deseja excluir?')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Essa ação não pode ser desfeita.')
+    ).toBeInTheDocument();
   });
 
   it('should not render the modal when isOpen is false', () => {
     render(<AlertModal {...defaultProps} isOpen={false} />);
-    expect(screen.queryByText('Tem certeza que deseja excluir?')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Tem certeza que deseja excluir?')
+    ).not.toBeInTheDocument();
   });
 
   it('should call onClose when the Cancelar button is clicked', () => {
