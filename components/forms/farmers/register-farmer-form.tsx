@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Crops } from '@/types';
+import { useFarmer } from '@/context/FarmerProvider';
 
 const formSchema = z
   .object({
@@ -35,14 +36,16 @@ const formSchema = z
     },
     {
       message:
-        'A soma da área cultivável e da área de vegetação deve ser menor ou igual à área total',
-      path: ['arableArea']
+        'A soma da área agricultável e da área de vegetação deve ser menor ou igual à área total',
+      path: ['totalArea']
     }
   );
 
-type FormValues = z.infer<typeof formSchema>;
+export type FormValues = z.infer<typeof formSchema>;
 
 export function RegisterFarmerForm() {
+  const { farmer, setFarmer, resetFarmer } = useFarmer();
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,12 +57,31 @@ export function RegisterFarmerForm() {
       totalArea: 0,
       arableArea: 0,
       vegetationArea: 0,
-      crops: []
+      crops: [] as Crops[]
     }
   });
 
+  useEffect(() => {
+    if (farmer) {
+      Object.entries(farmer).forEach(([key, value]) => {
+        form.setValue(key as keyof FormValues, value, {
+          shouldValidate: false
+        });
+      });
+    }
+  }, [farmer, form]);
+
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      setFarmer(value as FormValues);
+    });
+    return () => subscription.unsubscribe();
+  }, [form, setFarmer]);
+
   function onSubmit(values: FormValues) {
     console.log(values);
+    resetFarmer();
+    form.reset();
   }
 
   return (
@@ -195,7 +217,7 @@ export function RegisterFarmerForm() {
         <FormField
           control={form.control}
           name="crops"
-          render={() => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Culturas plantadas</FormLabel>
               <div className="space-y-2">
@@ -204,7 +226,7 @@ export function RegisterFarmerForm() {
                     key={crop}
                     control={form.control}
                     name="crops"
-                    render={({ field }) => {
+                    render={({ field: cropField }) => {
                       return (
                         <FormItem
                           key={crop}
@@ -212,15 +234,14 @@ export function RegisterFarmerForm() {
                         >
                           <FormControl>
                             <Checkbox
-                              checked={field.value.includes(crop)}
+                              checked={cropField.value.includes(crop)}
                               onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, crop])
-                                  : field.onChange(
-                                      field.value.filter(
-                                        (value) => value !== crop
-                                      )
+                                const updatedValue = checked
+                                  ? [...cropField.value, crop]
+                                  : cropField.value.filter(
+                                      (value: Crops) => value !== crop
                                     );
+                                cropField.onChange(updatedValue);
                               }}
                             />
                           </FormControl>
