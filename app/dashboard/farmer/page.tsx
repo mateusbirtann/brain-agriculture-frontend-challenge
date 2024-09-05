@@ -42,10 +42,7 @@ export default async function page({ searchParams }: paramsProps) {
         <Separator />
 
         <div className="container mr-auto py-10">
-          <FarmerTable
-            columns={columns}
-            data={data}
-          />
+          <FarmerTable columns={columns} data={data} />
         </div>
       </div>
     </PageContainer>
