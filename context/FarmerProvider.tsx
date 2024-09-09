@@ -1,11 +1,11 @@
 'use client';
 
-import { FormValues } from '@/components/forms/farmers/register-farmer-form';
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { FarmerData } from '@/schemas/farmerSchema';
+import React, { createContext, useContext, useState } from 'react';
 
 interface FarmerContextType {
-  farmer: FormValues | null;
-  setFarmer: (farmer: FormValues | null) => void;
+  farmer: FarmerData | null;
+  setFarmer: (farmer: FarmerData | null) => void;
   resetFarmer: () => void;
 }
 
@@ -22,29 +22,14 @@ export const useFarmer = () => {
 export const FarmerProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
-  const [farmer, setFarmerState] = useState<FormValues | null>(() => {
-    if (typeof window !== 'undefined') {
-      const savedFarmer = localStorage.getItem('farmerData');
-      return savedFarmer ? JSON.parse(savedFarmer) : null;
-    }
-    return null;
-  });
+  const [farmer, setFarmerState] = useState<FarmerData | null>(null);
 
-  useEffect(() => {
-    if (farmer) {
-      localStorage.setItem('farmerData', JSON.stringify(farmer));
-    } else {
-      localStorage.removeItem('farmerData');
-    }
-  }, [farmer]);
-
-  const setFarmer = (newFarmer: FormValues | null) => {
+  const setFarmer = (newFarmer: FarmerData | null) => {
     setFarmerState(newFarmer);
   };
 
   const resetFarmer = () => {
     setFarmerState(null);
-    localStorage.removeItem('farmerData');
   };
 
   return (
