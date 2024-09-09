@@ -12,17 +12,37 @@ import { Farmer } from '@/types';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useFarmer } from '@/context/FarmerProvider';
+import { deleteFarmer } from '@/requests/farmer';
 
 interface CellActionProps {
   data: Farmer;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const { setFarmer } = useFarmer();
 
-  const onConfirm = async () => {};
+  const onConfirm = async () => {
+    try {
+      setLoading(true);
+      await deleteFarmer(data.id);
+
+      router.refresh();
+    } catch (error) {
+      alert(`Erro ao excluir o agricultor, ${error}`);
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
+  };
+
+  function handleEdit() {
+    setFarmer(data);
+    router.push(`/dashboard/farmers/${data.id}`);
+  }
 
   return (
     <>
@@ -43,7 +63,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/farmer/${data.id}`)}
+            onClick={handleEdit}
           >
             <Edit className="mr-2 h-4 w-4" /> Editar
           </DropdownMenuItem>

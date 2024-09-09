@@ -33,21 +33,21 @@ describe('AlertModal', () => {
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
 
-  it('should call onConfirm when the Continuar button is clicked', () => {
+  it('should call onConfirm when the Excluir button is clicked', () => {
     render(<AlertModal {...defaultProps} />);
-    fireEvent.click(screen.getByText('Continuar'));
+    fireEvent.click(screen.getByText('Excluir'));
     expect(defaultProps.onConfirm).toHaveBeenCalled();
   });
 
   it('should disable buttons when loading is true', () => {
     render(<AlertModal {...defaultProps} loading={true} />);
     expect(screen.getByText('Cancelar')).toBeDisabled();
-    expect(screen.getByText('Continuar')).toBeDisabled();
+    expect(screen.getByText('Excluindo...')).toBeDisabled();
   });
 
   it('should enable buttons when loading is false', () => {
     render(<AlertModal {...defaultProps} loading={false} />);
     expect(screen.getByText('Cancelar')).toBeEnabled();
-    expect(screen.getByText('Continuar')).toBeEnabled();
+    expect(screen.getByText('Excluir')).toBeEnabled();
   });
 });

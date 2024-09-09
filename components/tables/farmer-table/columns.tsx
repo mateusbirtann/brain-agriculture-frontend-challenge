@@ -1,6 +1,6 @@
 'use client';
 
-import { Farmer } from '@/types';
+import { Crops, Farmer } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 
@@ -41,7 +41,7 @@ export const columns: ColumnDef<Farmer>[] = [
     header: 'Culturas',
     cell: ({ row }) => {
       const crops = row.original.crops;
-      return crops.join(', ');
+      return crops.map(crop => Crops[crop as keyof typeof Crops]).join(', ');
     }
   },
   {
