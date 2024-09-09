@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${inter.className} overflow-hidden`}
+        className={`${inter.className} overflow-hidden bg-zinc-50/10`}
         suppressHydrationWarning={true}
       >
         <FarmerProvider>{children}</FarmerProvider>
