@@ -4,6 +4,7 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable
 } from '@tanstack/react-table';
 
@@ -15,7 +16,9 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { useState } from 'react';
+import { PaginationControls } from './pagination-controls';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -26,15 +29,26 @@ export function FarmerTable<TData, TValue>({
   columns,
   data
 }: DataTableProps<TData, TValue>) {
+
+  const [pageSize] = useState(10);
+  const [pageIndex, setPageIndex] = useState(0);
+
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel()
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    state: {
+      pagination: {
+        pageSize,
+        pageIndex,
+      },
+    }
   });
 
   return (
     <>
-      <ScrollArea className="h-[calc(80vh-220px)] rounded-md border md:h-[calc(80dvh-200px)]">
+      <ScrollArea className="bg-white shadow h-[calc(80vh-160px)] rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -45,9 +59,9 @@ export function FarmerTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
@@ -83,7 +97,10 @@ export function FarmerTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+
+        <ScrollBar orientation="horizontal" />
       </ScrollArea>
+      <PaginationControls table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
     </>
   );
 }
