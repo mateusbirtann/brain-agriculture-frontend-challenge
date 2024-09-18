@@ -88,12 +88,24 @@ $ docker-compose up
 
 ```
 
+#### Executando o Prisma
+
+```bash
+
+# Gere o cliente Prisma
+npx prisma generate
+
+# Envie o esquema do banco de dados para o seu banco de dados
+npx prisma db push
+```
+
 ## ⚙️ Configuração de Ambiente
 
 Para configurar as variáveis de ambiente, crie um arquivo `.env` na raiz do projeto. Aqui está um exemplo de configuração:
 
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres?schema=public"
+NEXT_PUBLIC_API_BASE_URL="http://localhost:3000"
 ```
 
 ## 🛠 Tecnologias
